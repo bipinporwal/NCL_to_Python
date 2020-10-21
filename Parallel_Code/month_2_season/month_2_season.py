@@ -43,6 +43,7 @@ import dask
 import distributed
 import time
 
+# Create a PBS Cluster job-script using dask-jobqueue
 cluster = PBSCluster(queue='research',
                      project='DaskOnPBS',
                      local_directory='DASK_OUT/',
@@ -57,24 +58,31 @@ cluster = PBSCluster(queue='research',
                      sheebang='#!/bin/bash',
                      interface='ipogif0')
 
+
+# Store the command line argument in a variable 'j'
 j = sys.argv[1]
 j = int(j)
 # Scale clusters to add j workers (j= number of jobs)
 cluster.scale(j)
 
+# Create dask-scheduler (client) and pass it the cluster configuration
 client = Client(cluster)
 
 # Enter the path to the dataset
 path = open("INPUT_PATH.txt")
+# Read the dataset path
 path1 = path.read()
 path1 = path1.rstrip('\n')
 #print("PATH IS: {}".format(path1))
+
+# Open dataset parallelly using dask and create chunks
 ds = xr.open_mfdataset(path1, chunks = {'nj':40, 'ni':40}, parallel = True)
 
 var = ds["fsalt"]
 
 
 strt = time.time()
+# Send function to workers for parallel execution
 result = month_to_season(var, "JJA").compute()
 end = time.time()
 
@@ -83,5 +91,7 @@ client.shutdown()
 
 
 print(result)
+# Calculate the difference between start and end time of the function
 print("Time taken by the function: {} seconds".format(end-strt))
 
+path.close()

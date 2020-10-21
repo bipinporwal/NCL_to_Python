@@ -113,15 +113,15 @@ def month_to_season(xMon, SEASON):
     if (num_of_dim == 1):
         for nyr in range(no_year_start, (no_year_last+1)):
             n = nyr * no_of_months + NMO
-            da_new[n] = (xMon[n-1] + xMon[n] + xMon[n+1]) * con
+            da_new[n].values = (xMon[n-1] + xMon[n] + xMon[n+1]) * con
         
         if (NMO == 0):
             n = 0
-            da_new[n] = (xMon[n] + xMon[n+1])*0.5
+            da_new[n].values = (xMon[n] + xMon[n+1])*0.5
         
         if (NMO == (no_of_months-1)):
             n = (no_of_years-1)*no_of_months + NMO
-            da_new[n] = (xMon[n] + xMon[n-1])*0.5
+            da_new[n].values = (xMon[n] + xMon[n-1])*0.5
 
         da_new = da_new[NMO:no_of_time:no_of_months]               
         
@@ -129,15 +129,15 @@ def month_to_season(xMon, SEASON):
     if (num_of_dim == 3):
         for nyr in range(no_year_start, (no_year_last+1)):
             n = nyr*no_of_months + NMO
-            da_new[n,:,:] = (xMon[(n-1),:,:] + xMon[n,:,:] + xMon[(n+1),:,:]) * con
+            da_new[n,:,:].values = (xMon[(n-1),:,:] + xMon[n,:,:] + xMon[(n+1),:,:]) * con
         
         if (NMO == 0):
             n = 0
-            da_new[n,:,:] = (xMon[n,:,:] + xMon[(n+1),:,:])*0.5
+            da_new[n,:,:].values = (xMon[n,:,:] + xMon[(n+1),:,:])*0.5
         
         if (NMO == (no_of_months-1)):
             n = (no_of_years-1)*no_of_months + NMO
-            da_new[n,:,:] = (xMon[n,:,:] + xMon[(n-1),:,:])*0.5
+            da_new[n,:,:].values = (xMon[n,:,:] + xMon[(n-1),:,:])*0.5
         
         da_new = da_new[NMO:no_of_time:no_of_months,:,:]
 
@@ -146,15 +146,15 @@ def month_to_season(xMon, SEASON):
     if (num_of_dim == 4):
         for nyr in range(no_year_start, (no_year_last+1)):
             n = nyr*no_of_months + NMO
-            da_new[n,:,:,:] = (xMon[(n-1),:,:,:] + xMon[n,:,:,:] + xMon[(n+1),:,:,:]) * con
+            da_new[n,:,:,:].values = (xMon[(n-1),:,:,:] + xMon[n,:,:,:] + xMon[(n+1),:,:,:]) * con
         
         if (NMO == 0):
             n = 0
-            da_new[0,:,:,:] = (xMon[n,:,:,:] + xMon[(n+1),:,:,:])*0.5
+            da_new[0,:,:,:].values = (xMon[n,:,:,:] + xMon[(n+1),:,:,:])*0.5
         
         if (NMO == (no_of_months-1)):
             n = (no_of_years-1)*no_of_months + NMO
-            da_new[(n),:,:,:] = (xMon[n,:,:,:] + xMon[(n-1),:,:,:])*0.5
+            da_new[(n),:,:,:].values = (xMon[n,:,:,:] + xMon[(n-1),:,:,:])*0.5
         
         da_new = da_new[NMO:no_of_time:no_of_months,:,:,:]
                                   

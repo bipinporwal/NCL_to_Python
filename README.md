@@ -57,17 +57,32 @@ ____
    ```
 
 3. The entire testing was done on Pratyush Supercomputer. Since it uses PBS Job Script to submit the jobs in cluster, we used PBSCluster function inside the parallel version of the scripts. However to test the functions on a local multi-core computer, PBSCluster function should be commented and instead direct dask-scheduler connection needs to setup.
+
 4. To run the test on any other HPC cluster (SLURM, LSF, etc.), Example Deployment are available at this [dask-jobqueue website](https://jobqueue.dask.org/en/latest/examples.html)
+
+5. To run the parallel version of scripts using dask-jobqueue, use the following command:
+
+   ```bash
+   python filename.py 4
+   ```
+
+   Here '4' is the number of workers assigned. This number can be changed from 1 to maximum number of cores available in the cluster.
+
+6. Python has GIL issues and hence, for best results, avoid using threads.
 
 ____
 
 ### Sample to run serial scripts on a local computer
 
+**NOTE:** To run these scripts, download ncl_to_python module (folder) from [here](https://github.com/bipinporwal/NCL_to_Python/tree/master/Parallel_Code/).
+
 * Test script to run functions serially:
 
   ```python
+  # Import the libraries
   import xarray as xr
   import sys
+  # Search modules in parent folder
   sys.path.insert(1, '..')
   from ncl_to_python.calculate_monthly_values_module import *
   import time
@@ -75,22 +90,34 @@ ____
   # Enter the path to the dataset
   
   path = open("INPUT_PATH.txt")
+  # Read the dataset path
   path1 = path.read()
   path1 = path1.rstrip('\n')
+  # Open dataset using xarray
   ds = xr.open_dataset(path1)
+  # Read the datavariable. This can be different based on the dataset used.
   var = ds["FLNS"]
   
+  # Set the opt variable to True/False and assign a value to critical value (nval_crit)
   opt = xr.DataArray(data = False)
   opt.attrs["nval_crit"] = 30
   
   
   strt = time.time()
+  
+  # Call/Execute the calculate_monthly_values function sequentially
   result = calculate_monthly_values(var, "avg", 0, opt)
   end = time.time()
   
   print(result)
   
   path.close()
+  ```
+
+  To run this script use the following command:
+
+  ```bash
+  python filename.py
   ```
 
   
@@ -127,28 +154,44 @@ ____
   # Scale clusters to add j workers (j= number of jobs)
   cluster.scale(j)
   '''
-  cluster = LocalCluster()
-  client = Client(cluster)
+  
+  # Set up the cluster configuration for local-machine. You can choose the total number of workers to use using "n_workers = " option in LocalCluster() function. If unspecified, it uses the maximum number of cores available inside the machine. Please also note that Python has GIL issues and hence, for best results, avoid using threads.
+  if __name__=="__main__":
+      cluster = LocalCluster()
+      client = Client(cluster)
   
   # Enter the path to the dataset
   path = open("INPUT_PATH.txt")
   path1 = path.read()
   path1 = path1.rstrip('\n')
+  
+  # Open the dataset parallelly using dask and create proper chunks.
   ds = xr.open_mfdataset(path1, chunks = {'lat':60, 'lon':60}, parallel = True)
   
+  # Extract the variable. This can be different depending on the dataset used.
   var = ds["AQRAIN"]
   
   strt = time.time()
+  # Send the function to workers for parallel execution
   result = month_to_season12(var).compute()
   end = time.time()
   
   # Shutdown the client, workers and jobs running
-  client.shutdown()
+  if __name__=="__main__":
+      client.shutdown()
   
   print(result)
+  
+  # Calculate the difference of start and end time taken by the function.
   print("Time taken by the function: {} seconds".format(end-strt))
   
-  
-  
-  
+  path.close()
   ```
+  
+  To run this script, use the following command:
+  
+  ```bash
+  python filename.py
+  ```
+  
+  

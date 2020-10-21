@@ -5,6 +5,32 @@
 ## Institute/Company: IIIM Pune, Ministry of Earth Science, Gov. of India
 ##================================================================
 """
+
+"""
+---------------------------------------------------------
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the names of author and company. 
+
+2. Name of developers may not be used to endorse or promote products derived from this software without
+specific prior written permission.
+
+----
+1. Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its contributors
+may be used to endorse or promote products derived from this software without
+specific prior written permission.
+"""
+
+##================================================================
 # import necessary libraries
 import numpy as np
 import pandas as pd
@@ -49,8 +75,8 @@ def month_to_season12(xMon):
         
         # Calculate seasonal mean for each season
         dr = xMon.rolling(time = 3, center = True).mean(skipna = True).compute()
-        dr[0] = (xMon[0] + xMon[1]) * 0.5
-        dr[(no_of_time-1)] = (xMon[(no_of_time-2)] + xMon[(no_of_time-1)]) * 0.5
+        dr[0].values = (xMon[0] + xMon[1]) * 0.5
+        dr[(no_of_time-1)].values = (xMon[(no_of_time-2)] + xMon[(no_of_time-1)]) * 0.5
         
         # Create a new DataArray using the existing ones
         xSea = xMon.copy(data = dr)
@@ -69,8 +95,8 @@ def month_to_season12(xMon):
         
         # Calculate seasonal mean for each season
         dr = xMon.rolling(time = 3, center = True).mean(skipna = True).compute()
-        dr[0,:,:] = (xMon[0,:,:] + xMon[1,:,:]) * 0.5
-        dr[(no_of_time-1),:,:] = (xMon[(no_of_time-2),:,:] + xMon[(no_of_time-1),:,:]) * 0.5
+        dr[0,:,:].values = (xMon[0,:,:] + xMon[1,:,:]) * 0.5
+        dr[(no_of_time-1),:,:].values = (xMon[(no_of_time-2),:,:] + xMon[(no_of_time-1),:,:]) * 0.5
         
         # Create a new DataArray using the existing ones
         xSea = xMon.copy(data = dr)
@@ -88,8 +114,8 @@ def month_to_season12(xMon):
         
         # Calculate seasonal mean for each season
         dr = xMon.rolling(time = 3, center = True).mean(skipna = True).compute()
-        dr[0,:,:,:] = (xMon[0,:,:,:] + xMon[1,:,:,:]) * 0.5
-        dr[(no_of_time-1),:,:,:] = (xMon[(no_of_time-2),:,:,:] + xMon[(no_of_time-1),:,:,:]) * 0.5
+        dr[0,:,:,:].values = (xMon[0,:,:,:] + xMon[1,:,:,:]) * 0.5
+        dr[(no_of_time-1),:,:,:].values = (xMon[(no_of_time-2),:,:,:] + xMon[(no_of_time-1),:,:,:]) * 0.5
         
         # Create a new DataArray using the existing ones
         xSea = xMon.copy(data = dr)
