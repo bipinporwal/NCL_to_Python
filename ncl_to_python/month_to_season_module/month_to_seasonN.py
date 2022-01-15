@@ -1,6 +1,6 @@
 """
 ##================================================================
-## Routine          : month_to_seasonN.py
+## Routine          : month_to_season_N.py
 ## Author/Developer : IITM Pune/RAIT Mumbai 
 ## Institute/Company: IIIM Pune, Ministry of Earth Science, Gov. of India
 ##================================================================
@@ -29,8 +29,6 @@ and/or other materials provided with the distribution.
 may be used to endorse or promote products derived from this software without
 specific prior written permission.
 """
-
-##================================================================
 # import necessary libraries
 import numpy as np
 import pandas as pd
@@ -75,8 +73,8 @@ def month_to_season12(xMon):
         
         # Calculate seasonal mean for each season
         dr = xMon.rolling(time = 3, center = True).mean(skipna = True).compute()
-        dr[0].values = (xMon[0] + xMon[1]) * 0.5
-        dr[(no_of_time-1)].values = (xMon[(no_of_time-2)] + xMon[(no_of_time-1)]) * 0.5
+        dr[0] = (xMon[0] + xMon[1]) * 0.5
+        dr[(no_of_time-1)] = (xMon[(no_of_time-2)] + xMon[(no_of_time-1)]) * 0.5
         
         # Create a new DataArray using the existing ones
         xSea = xMon.copy(data = dr)
@@ -95,8 +93,8 @@ def month_to_season12(xMon):
         
         # Calculate seasonal mean for each season
         dr = xMon.rolling(time = 3, center = True).mean(skipna = True).compute()
-        dr[0,:,:].values = (xMon[0,:,:] + xMon[1,:,:]) * 0.5
-        dr[(no_of_time-1),:,:].values = (xMon[(no_of_time-2),:,:] + xMon[(no_of_time-1),:,:]) * 0.5
+        dr[0,:,:] = (xMon[0,:,:] + xMon[1,:,:]) * 0.5
+        dr[(no_of_time-1),:,:] = (xMon[(no_of_time-2),:,:] + xMon[(no_of_time-1),:,:]) * 0.5
         
         # Create a new DataArray using the existing ones
         xSea = xMon.copy(data = dr)
@@ -114,8 +112,8 @@ def month_to_season12(xMon):
         
         # Calculate seasonal mean for each season
         dr = xMon.rolling(time = 3, center = True).mean(skipna = True).compute()
-        dr[0,:,:,:].values = (xMon[0,:,:,:] + xMon[1,:,:,:]) * 0.5
-        dr[(no_of_time-1),:,:,:].values = (xMon[(no_of_time-2),:,:,:] + xMon[(no_of_time-1),:,:,:]) * 0.5
+        dr[0,:,:,:] = (xMon[0,:,:,:] + xMon[1,:,:,:]) * 0.5
+        dr[(no_of_time-1),:,:,:] = (xMon[(no_of_time-2),:,:,:] + xMon[(no_of_time-1),:,:,:]) * 0.5
         
         # Create a new DataArray using the existing ones
         xSea = xMon.copy(data = dr)

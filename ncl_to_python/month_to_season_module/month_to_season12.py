@@ -30,8 +30,6 @@ may be used to endorse or promote products derived from this software without
 specific prior written permission.
 """
 
-##================================================================
-
 # ignore warnings
 import warnings
 warnings.filterwarnings('ignore')
@@ -95,8 +93,8 @@ def month_to_season12(xMon):
         
         # Calculate seasonal mean for each season
         dr = xMon.rolling(time = 3, center = True).mean(skipna = True)
-        dr[0].values = (xMon[0] + xMon[1]) * 0.5
-        dr[(no_of_time-1)].values = (xMon[(no_of_time-2)] + xMon[(no_of_time-1)]) * 0.5
+        dr[0] = (xMon[0] + xMon[1]) * 0.5
+        dr[(no_of_time-1)] = (xMon[(no_of_time-2)] + xMon[(no_of_time-1)]) * 0.5
         
         # Create a new DataArray using the existing ones
         xSea = xMon.copy(data = dr)
@@ -116,8 +114,8 @@ def month_to_season12(xMon):
         
         # Calculate seasonal mean for each season
         dr = xMon.rolling(time = 3, center = True).mean(skipna = True)
-        dr[0,:,:].values = (xMon[0,:,:] + xMon[1,:,:]) * 0.5
-        dr[(no_of_time-1),:,:].values = (xMon[(no_of_time-2),:,:] + xMon[(no_of_time-1),:,:]) * 0.5
+        dr[0,:,:] = (xMon[0,:,:] + xMon[1,:,:]) * 0.5
+        dr[(no_of_time-1),:,:] = (xMon[(no_of_time-2),:,:] + xMon[(no_of_time-1),:,:]) * 0.5
         
         # Create a new DataArray using the existing ones
         xSea = xMon.copy(data = dr)
@@ -137,8 +135,8 @@ def month_to_season12(xMon):
         
         # Calculate seasonal mean for each season
         dr = xMon.rolling(time = 3, center = True).mean(skipna = True)
-        dr[0,:,:,:].values = (xMon[0,:,:,:] + xMon[1,:,:,:]) * 0.5
-        dr[(no_of_time-1),:,:,:].values = (xMon[(no_of_time-2),:,:,:] + xMon[(no_of_time-1),:,:,:]) * 0.5
+        dr[0,:,:,:] = (xMon[0,:,:,:] + xMon[1,:,:,:]) * 0.5
+        dr[(no_of_time-1),:,:,:] = (xMon[(no_of_time-2),:,:,:] + xMon[(no_of_time-1),:,:,:]) * 0.5
         
         # Create a new DataArray using the existing ones
         xSea = xMon.copy(data = dr)

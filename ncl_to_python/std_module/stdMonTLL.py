@@ -1,6 +1,6 @@
 """
 ##================================================================
-## Routine          : clmMonTLL.py
+## Routine          : stdMonTLL.py
 ## Author/Developer : IITM Pune/RAIT Mumbai 
 ## Institute/Company: IIIM Pune, Ministry of Earth Science, Gov. of India
 ##================================================================
@@ -31,28 +31,25 @@ specific prior written permission.
 """
 
 ##================================================================
-
-
-# import libraries
-
+# Import libraries
 import xarray as xr
+import pandas as pd
 
-def clmMonTLL(x):
-    """Calculates long term monthly means (monthly climatology) from monthly data: (time,lat,lon) version.
+def stdMonTLL(x):
+    """Calculates standard deviation (time,lat,lon version)
 
     Parameters
     ----------
-    x : A three dimensional DataArray. Dimensions must be time, lat, lon. The time dimension must be a multiple of 12. The dimensions must be named.
+    x : A three-dimensional DataArray. Dimensions must be time,lat,lon. The time dimension must be a multiple of 12.
 
     Returns
     -------
-    objectDataArray : A DataArray of the same size and type as x except that the leftmost dimension will be of size 12.
+    objectDataArray : A DataArray object of the same size and type as x.
 
     """
-    
     # Calculate the sizes of time dimension
     len_of_dim = x.sizes
-    time_size = len_of_dim[x.dims[0]]
+    no_of_time = len_of_dim[x.dims[0]] # no_of_time = Size of time dimension
     num_of_dim = len(len_of_dim)
 
     # Check if num_of_dim of dataarray matches the function
@@ -60,10 +57,11 @@ def clmMonTLL(x):
         print("Expected variable of num_of_dim = 3, recieved num_of_dim = {}".format(num_of_dim))
         return None
     
+    
     # Check if number of months are multiple of 12; if not, exit the function
     no_of_months = 12
-    if ((time_size % no_of_months) != 0):
-        print("clmMonTLL: dimension must be a multiple of 12")
+    if ((no_of_time % no_of_months) != 0):
+        print("stdMonTLL: dimension must be a multiple of 12")
         return None
     
     # Store the time dimension name present in dataset as time variable
@@ -72,18 +70,19 @@ def clmMonTLL(x):
     # Store as a string for groupby operation
     time_month = time + '.month'
     
-    # Compute 12 months average
-    ave_month = x.groupby(time_month).mean(time, skipna = True)
+    #x['month']=xr.DataArray(x.indexes['time'].strftime('%m'),coords=x.time.coords)                                     
     
+    # Compute 12 months standard deviation
+    xstd = x.groupby(time_month).std(time,ddof=1)                                                                                       
+        
     # Copy and update the attributes
-    ave_month.attrs = x.attrs
-    ave_month = ave_month.rename("aveMonth")
-    ave_month.attrs['time_op_ncl'] = "Climatology: " + str(int(time_size/no_of_months)) + " years"
-    ave_month.attrs['info'] = "function clmMonTLL"
-
-    # Copy the encoding from original DataArray
-    ave_month.encoding = x.encoding
+    xstd.attrs = x.attrs
+    xstd.attrs['time_op_ncl'] = "Climatology: " + str(int(no_of_time/no_of_months)) + " years"                   
+    xstd.attrs['info'] = "function stdMonTLL"
     
-    # Return the results
-    return ave_month
+    # Copy the encoding from the original DataArray
+    xstd.encoding = x.encoding
+
+    # Return the new dataarray
+    return xstd
 
